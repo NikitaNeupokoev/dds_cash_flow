@@ -1,0 +1,103 @@
+{% extends 'cash_flow/base.html' %}
+
+{% block title %}Список записей ДДС{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Записи движения денежных средств</h1>
+    <a href="{% url 'cash_flow:record_create' %}" class="btn btn-success">+ Добавить запись</a>
+</div>
+
+<!-- Форма фильтрации -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Фильтры</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-2">
+                <label for="id_date_from" class="form-label">С даты</label>
+                {{ filter_form.date_from }}
+            </div>
+            <div class="col-md-2">
+                <label for="id_date_to" class="form-label">По дату</label>
+                {{ filter_form.date_to }}
+            </div>
+            <div class="col-md-2">
+                <label for="id_status" class="form-label">Статус</label>
+                {{ filter_form.status }}
+            </div>
+            <div class="col-md-2">
+                <label for="id_type" class="form-label">Тип</label>
+                {{ filter_form.type }}
+            </div>
+            <div class="col-md-2">
+                <label for="id_category" class="form-label">Категория</label>
+                {{ filter_form.category }}
+            </div>
+            <div class="col-md-2">
+                <label for="id_subcategory" class="form-label">Подкатегория</label>
+                {{ filter_form.subcategory }}
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Применить фильтры</button>
+                <a href="{% url 'cash_flow:record_list' %}" class="btn btn-secondary">Сбросить</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Таблица записей -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Всего записей: {{ records|length }}</h5>
+        {% if total_amount %}
+        <span class="total-amount">Общая сумма: {{ total_amount }} руб.</span>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% if records %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Статус</th>
+                        <th>Тип</th>
+                        <th>Категория</th>
+                        <th>Подкатегория</th>
+                        <th>Сумма</th>
+                        <th>Описание</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td>{{ record.operation_date }}</td>
+                        <td>{{ record.status }}</td>
+                        <td>{{ record.type }}</td>
+                        <td>{{ record.category|default:"-" }}</td>
+                        <td>{{ record.subcategory|default:"-" }}</td>
+                        <td class="{% if record.type.name == 'Пополнение' %}positive-amount{% else %}negative-amount{% endif %}">
+                            {{ record.amount }} руб.
+                        </td>
+                        <td>{{ record.description|default:"-"|truncatewords:5 }}</td>
+                        <td class="table-actions">
+                            <a href="{% url 'cash_flow:record_edit' record.pk %}" class="btn btn-sm btn-outline-primary">✏️</a>
+                            <a href="{% url 'cash_flow:record_delete' record.pk %}" class="btn btn-sm btn-outline-danger">🗑️</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <p class="text-muted">Записи не найдены</p>
+            <a href="{% url 'cash_flow:record_create' %}" class="btn btn-primary">Добавить первую запись</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

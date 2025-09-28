@@ -1,0 +1,65 @@
+{% extends 'cash_flow/base.html' %}
+
+{% block title %}Управление справочниками{% endblock %}
+
+{% block content %}
+<h1>Управление справочниками</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Статусы</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for status in statuses %}
+                    <li class="list-group-item">{{ status.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Типы операций</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for type in types %}
+                    <li class="list-group-item">{{ type.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Категории и подкатегории</h5>
+            </div>
+            <div class="card-body">
+                {% for category in categories %}
+                <div class="mb-3">
+                    <strong>{{ category.name }} ({{ category.type }})</strong>
+                    <ul>
+                        {% for subcategory in category.subcategories.all %}
+                        <li>{{ subcategory.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <p class="text-muted">Для редактирования справочников используйте <a href="/admin/">админ-панель Django</a>.</p>
+</div>
+{% endblock %}

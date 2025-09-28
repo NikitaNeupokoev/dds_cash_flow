@@ -1,0 +1,134 @@
+{% extends 'cash_flow/base.html' %}
+
+{% block title %}{% if object %}Редактирование записи{% else %}Создание записи{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">{% if object %}Редактировать запись{% else %}Создать новую запись{% endif %}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Пожалуйста, исправьте ошибки:</strong>
+                        <ul class="mb-0 mt-2">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="id_operation_date" class="form-label">Дата операции *</label>
+                            {{ form.operation_date }}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="id_status" class="form-label">Статус *</label>
+                            {{ form.status }}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="id_type" class="form-label">Тип операции *</label>
+                            {{ form.type }}
+                            <div class="form-text">Сначала выберите тип, затем категорию и подкатегорию</div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="id_category" class="form-label">Категория *</label>
+                            {{ form.category }}
+                            <div class="form-text">
+                                {% if form.type.value %}
+                                    Доступные категории для "{{ form.type.value }}":
+                                    {% for category in all_categories %}
+                                        {% if category.type.id == form.type.value %}
+                                            {{ category.name }}{% if not forloop.last %}, {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    Выберите тип операции чтобы увидеть категории
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="id_subcategory" class="form-label">Подкатегория *</label>
+                            {{ form.subcategory }}
+                            <div class="form-text">
+                                {% if form.category.value %}
+                                    Доступные подкатегории:
+                                    {% for subcategory in all_subcategories %}
+                                        {% if subcategory.category.id == form.category.value %}
+                                            {{ subcategory.name }}{% if not forloop.last %}, {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    Выберите категорию чтобы увидеть подкатегории
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="id_amount" class="form-label">Сумма (руб) *</label>
+                            {{ form.amount }}
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="id_description" class="form-label">Описание</label>
+                            {{ form.description }}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-success">Сохранить</button>
+                        <a href="{% url 'cash_flow:record_list' %}" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Подсказка по связям -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">📋 Справочник связей</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for type in all_types %}
+                    <div class="col-md-6 mb-3">
+                        <strong>{{ type.name }}:</strong>
+                        <ul class="mb-0">
+                            {% for category in all_categories %}
+                                {% if category.type == type %}
+                                    <li>
+                                        {{ category.name }}
+                                        <ul>
+                                            {% for subcategory in category.subcategories.all %}
+                                                <li>{{ subcategory.name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<!-- Без JavaScript - чистый HTML -->
+{% endblock %}
