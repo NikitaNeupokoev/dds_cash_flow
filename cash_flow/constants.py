@@ -4,6 +4,13 @@ MAX_DESCRIPTION_LENGTH = 200
 AMOUNT_MAX_DIGITS = 12
 AMOUNT_DECIMAL_PLACES = 2
 
+# Константы пагинации для админки
+ADMIN_LIST_PER_PAGE_SMALL = 20  # Для простых справочников
+ADMIN_LIST_PER_PAGE_LARGE = 50  # Для основных данных
+
+# Константы пагинации для представлений
+VIEW_PAGINATE_BY = 20  # Количество записей на странице в списках
+
 # Начальные данные
 INITIAL_STATUSES = ['Бизнес', 'Личное', 'Налог']
 INITIAL_TYPES = ['Пополнение', 'Списание']

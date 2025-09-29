@@ -24,7 +24,6 @@ class CashFlowFormMixin:
         subcategory = cleaned_data.get('subcategory')
         selected_type = cleaned_data.get('type')
 
-        # Проверяем что категория принадлежит выбранному типу
         if category and category.type != selected_type:
             form.add_error(
                 'category',
@@ -32,7 +31,6 @@ class CashFlowFormMixin:
             )
             return False
 
-        # Проверяем что подкатегория принадлежит выбранной категории
         if subcategory and subcategory.category != category:
             form.add_error(
                 'subcategory',

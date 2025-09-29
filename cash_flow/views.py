@@ -20,6 +20,7 @@ from .forms import (
     CashFlowRecordForm
 )
 from .mixins import CashFlowFormMixin
+from .constants import VIEW_PAGINATE_BY
 
 
 class CashFlowListView(ListView):
@@ -27,7 +28,7 @@ class CashFlowListView(ListView):
 
     model = CashFlow
     template_name = 'cash_flow/record_list.html'
-    paginate_by = 20
+    paginate_by = VIEW_PAGINATE_BY
     context_object_name = 'records'
 
     def get_queryset(self):
@@ -41,7 +42,6 @@ class CashFlowListView(ListView):
         if self.filter_form.is_valid():
             cleaned_data = self.filter_form.cleaned_data
 
-            # Применяем фильтры с минимальными переменными
             date_from = cleaned_data.get('date_from')
             date_to = cleaned_data.get('date_to')
 
@@ -54,7 +54,6 @@ class CashFlowListView(ListView):
                     operation_date__lte=date_to
                 )
 
-            # Остальные фильтры напрямую из cleaned_data
             if cleaned_data.get('status'):
                 queryset = queryset.filter(
                     status=cleaned_data['status']
@@ -85,7 +84,6 @@ class CashFlowListView(ListView):
             record.amount for record in context['records']
         )
 
-        # Добавляем данные для фильтров
         context.update({
             'all_statuses': Status.objects.all(),
             'all_types': Type.objects.all(),

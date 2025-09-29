@@ -58,8 +58,6 @@ class CashFlowRecordForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Простая инициализация - все категории и подкатегории доступны
-        # Валидация будет на уровне модели
 
 
 class CashFlowFilterForm(forms.Form):

@@ -7,6 +7,10 @@ from .models import (
     Subcategory,
     Type
 )
+from .constants import (
+    ADMIN_LIST_PER_PAGE_SMALL,
+    ADMIN_LIST_PER_PAGE_LARGE
+)
 
 
 @admin.register(Status)
@@ -15,7 +19,7 @@ class StatusAdmin(admin.ModelAdmin):
 
     list_display = ['name']
     search_fields = ['name']
-    list_per_page = 20
+    list_per_page = ADMIN_LIST_PER_PAGE_SMALL
 
 
 @admin.register(Type)
@@ -24,7 +28,7 @@ class TypeAdmin(admin.ModelAdmin):
 
     list_display = ['name']
     search_fields = ['name']
-    list_per_page = 20
+    list_per_page = ADMIN_LIST_PER_PAGE_SMALL
 
 
 @admin.register(Category)
@@ -34,7 +38,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'type']
     list_filter = ['type']
     search_fields = ['name']
-    list_per_page = 20
+    list_per_page = ADMIN_LIST_PER_PAGE_SMALL
 
 
 @admin.register(Subcategory)
@@ -67,7 +71,7 @@ class CashFlowAdmin(admin.ModelAdmin):
     ]
     search_fields = ['description']
     date_hierarchy = 'operation_date'
-    list_per_page = 50
+    list_per_page = ADMIN_LIST_PER_PAGE_LARGE
 
     fieldsets = (
         ('Основная информация', {

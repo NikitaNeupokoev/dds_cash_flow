@@ -157,14 +157,12 @@ class CashFlow(models.Model):
         """Валидация связей между полями"""
         super().clean()
 
-        # Проверяем что категория принадлежит выбранному типу
         if self.category and self.category.type != self.type:
             raise ValidationError({
                 'category': f'Категория "{self.category}"'
                 f'не принадлежит типу "{self.type}"'
             })
 
-        # Проверяем что подкатегория принадлежит выбранной категории
         if self.subcategory and self.subcategory.category != self.category:
             raise ValidationError({
                 'subcategory': f'Подкатегория "{self.subcategory}"'
